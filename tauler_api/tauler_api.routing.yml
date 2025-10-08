@@ -1,7 +1,0 @@
-tauler_api.mini_data:
-  path: '/api/mini-tauler-data'
-  defaults:
-    _controller: '\Drupal\tauler_api\Controller\MiniTaulerApiController::getApiData'
-    _title: 'Mini Tauler API Data'
-  requirements:
-    _permission: 'access content'
