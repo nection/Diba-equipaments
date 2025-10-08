@@ -1,9 +1,0 @@
-tauler.dashboard:
-  path: '/tauler'
-  defaults:
-    _title: 'Tauler estadístiques'
-    _controller: '\Drupal\tauler\Controller\TaulerController::showDashboard'
-  requirements:
-    _permission: 'access tauler dashboard'
-  options:
-    _admin_route: false

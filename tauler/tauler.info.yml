@@ -1,8 +1,0 @@
-name: 'Tauler d Estadístiques'
-type: module
-description: 'Mostra un tauler amb estadístiques de les dades del formulari d autoavaluació, filtrat per municipi d usuari (CSS/JS/HTML incrustat).'
-core_version_requirement: ^9 || ^10
-package: Custom
-dependencies:
-  - drupal:user
-  - drupal:node # O el mòdul que defineixi el camp field_municipi_user si no és user
