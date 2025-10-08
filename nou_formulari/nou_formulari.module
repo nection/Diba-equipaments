@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Implementació de hook_mail() per al mòdul nou_formulari.
+ */
+
+/**
+ * Implementació de hook_mail().
+ */
+function nou_formulari_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'formulari_resultat':
+      $message['subject'] = t('Resultat del formulari');
+      $message['body'][] = $params['message'];
+      break;
+  }
+}
+

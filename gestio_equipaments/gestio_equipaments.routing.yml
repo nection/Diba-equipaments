@@ -1,0 +1,31 @@
+gestio_equipaments.list:
+  path: '/admin/contingut/gestio-equipaments'
+  defaults:
+    _controller: '\Drupal\gestio_equipaments\Controller\GestioController::listPage'
+    _title: "Gestió d'Equipaments"
+  requirements:
+    _permission: 'administer equipaments'
+
+gestio_equipaments.add:
+  path: '/admin/contingut/gestio-equipaments/add'
+  defaults:
+    _form: '\Drupal\gestio_equipaments\Form\EquipamentForm'
+    _title: 'Afegir Equipament'
+  requirements:
+    _permission: 'administer equipaments'
+
+gestio_equipaments.edit:
+  path: '/admin/contingut/gestio-equipaments/edit/{codi_equipament}'
+  defaults:
+    _form: '\Drupal\gestio_equipaments\Form\EquipamentForm'
+    _title: 'Editar Equipament'
+  requirements:
+    _permission: 'administer equipaments'
+
+gestio_equipaments.delete:
+  path: '/admin/contingut/gestio-equipaments/delete/{codi_equipament}'
+  defaults:
+    _form: '\Drupal\gestio_equipaments\Form\ConfirmDeleteForm'
+    _title: 'Confirmar eliminació'
+  requirements:
+    _permission: 'administer equipaments'

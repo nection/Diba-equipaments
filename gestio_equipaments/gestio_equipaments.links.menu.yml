@@ -1,0 +1,6 @@
+gestio_equipaments.admin_link:
+  title: "Gestió d'Equipaments"
+  description: "Gestiona els equipaments i municipis del sistema."
+  parent: system.admin_content
+  route_name: gestio_equipaments.list
+  weight: 10

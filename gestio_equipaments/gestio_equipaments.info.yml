@@ -1,0 +1,5 @@
+name: 'Gestió Equipaments'
+type: module
+description: 'Mòdul per afegir, editar i eliminar equipaments i municipis des d''una interfície d''administració.'
+core_version_requirement: ^9 || ^10
+package: 'Custom'

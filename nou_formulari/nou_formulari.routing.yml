@@ -1,0 +1,15 @@
+nou_formulari.form:
+  path: '/nou-formulari'
+  defaults:
+    _form: '\Drupal\nou_formulari\Form\NouFormulari'
+    _title: "Formulari d'autoevaluació"
+  requirements:
+    _permission: 'access content'
+
+
+nou_formulari.delete_equipament:
+    path: '/nou_formulari/delete_equipament'
+    defaults:
+      _controller: '\Drupal\nou_formulari\Form\NouFormulari::deleteEquipamentAjax'
+    requirements:
+      _permission: 'access content'

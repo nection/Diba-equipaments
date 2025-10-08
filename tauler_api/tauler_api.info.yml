@@ -1,0 +1,10 @@
+name: Mini Tauler API
+type: module
+description: 'Exposa dades clau del Tauler com una API JSON per a un bloc resum.'
+core_version_requirement: ^9 || ^10
+package: Personalitzat
+# És important declarar la dependència del mòdul original 'tauler'
+# si el nom del mòdul que conté TaulerController és 'tauler'.
+# Si el nom del mòdul és un altre, canvia-ho aquí.
+dependencies:
+  - tauler:tauler

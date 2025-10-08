@@ -1,0 +1,4 @@
+access tauler dashboard:
+  title: 'Accedir al Tauler d''Estadístiques personalitzat'
+  description: 'Permet veure el tauler amb les estadístiques dels municipis.'
+  restrict access: false

@@ -1,0 +1,8 @@
+nou_formulari_js:
+  version: 1.x
+  js:
+    js/nou_formulari.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings

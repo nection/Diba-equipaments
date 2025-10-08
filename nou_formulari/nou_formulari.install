@@ -1,0 +1,176 @@
+<?php
+
+/**
+ * @file
+ * Instal·lador i esquema de base de dades per al mòdul nou_formulari.
+ */
+
+/**
+ * Implementació de hook_schema().
+ *
+ * Defineix l'estructura de les taules del mòdul.
+ */
+function nou_formulari_schema() {
+  $schema = [];
+
+  // Taula per emmagatzemar la informació dels equips.
+  $schema['nou_formulari_equipaments'] = [
+	'description' => 'Desa la informació bàsica dels equipaments.',
+	'fields' => [
+	  'codi_equipament' => ['description' => "Codi identificador de l'equipament.", 'type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+	  'comarca' => ['description' => "Nom de la comarca.", 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	  'municipi' => ['description' => "Nom del municipi.", 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	  'nom_equipament' => ['description' => "Nom de l'equipament.", 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	  'espai_principal' => ['description' => "Nom de l'espai principal.", 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	],
+	'primary key' => ['codi_equipament'],
+  ];
+
+  // Definició base per a les taules de dades del formulari.
+  $dades_formulari_fields = [
+	'id' => ['description' => 'ID del registre a la taula principal.', 'type' => 'serial', 'not null' => TRUE],
+	'username' => ['description' => 'Nom d\'usuari que envia el formulari.', 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	'comarca' => ['description' => "Comarca de l'equipament.", 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	'municipi' => ['description' => "Municipi de l'equipament.", 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	'espai_principal' => ['description' => "Espai principal de l'equipament.", 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	'nom_equipament' => ['description' => "Nom de l'equipament.", 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	'codi_equipament' => ['description' => "Codi identificador de l'equipament.", 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	'hora_submissio' => ['description' => "Data i hora en què s'envia el formulari.", 'type' => 'varchar', 'length' => 255, 'not null' => FALSE],
+	// Preguntes principals (Sí/No)
+	'participacio_P1' => ['description' => 'Resposta P1', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'participacio_P2' => ['description' => 'Resposta P2', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'participacio_P3' => ['description' => 'Resposta P3', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'accessibilitat_A1' => ['description' => 'Resposta A1', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'accessibilitat_A2' => ['description' => 'Resposta A2', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'accessibilitat_A3' => ['description' => 'Resposta A3', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'accessibilitat_A4' => ['description' => 'Resposta A4', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'igualtat_I1' => ['description' => 'Resposta I1', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'igualtat_I2' => ['description' => 'Resposta I2', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'igualtat_I3' => ['description' => 'Resposta I3', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'igualtat_I4' => ['description' => 'Resposta I4', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'sostenibilitat_S1' => ['description' => 'Resposta S1', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'sostenibilitat_S2' => ['description' => 'Resposta S2', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'sostenibilitat_S3' => ['description' => 'Resposta S3', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+	'sostenibilitat_S4' => ['description' => 'Resposta S4', 'type' => 'varchar', 'length' => 10, 'not null' => FALSE],
+  ];
+
+  // Generació dinàmica dels camps de subítems per evitar repeticions
+  $mapa_subitems = [
+	'participacio' => ['P1','P2','P3'],
+	'accessibilitat' => ['A1','A2','A3','A4'],
+	'igualtat' => ['I1','I2','I3','I4'],
+	'sostenibilitat' => ['S1','S2','S3','S4'],
+  ];
+
+  foreach ($mapa_subitems as $pilar => $preguntes) {
+	foreach ($preguntes as $pregunta_key) {
+	  // Subítems estàndard (3 per pregunta)
+	  for ($i = 1; $i <= 3; $i++) {
+		$subitem_key = $pregunta_key . '_' . $i;
+		$checkbox_field = $pilar . '_' . $pregunta_key . '_subitem_' . $subitem_key;
+		$date_field = $checkbox_field . '_date';
+		$dades_formulari_fields[$checkbox_field] = ['description' => "Checkbox $subitem_key", 'type' => 'int', 'size' => 'tiny', 'not null' => FALSE];
+		$dades_formulari_fields[$date_field] = ['description' => "Data $subitem_key", 'type' => 'varchar', 'length' => 20, 'not null' => FALSE];
+	  }
+	  // Camps per a l'acció personalitzada
+	  $custom_plan_field = $pilar . '_' . $pregunta_key . '_custom_plan';
+	  $custom_date_field = $custom_plan_field . '_date';
+	  $dades_formulari_fields[$custom_plan_field] = ['description' => "Pla personalitzat $pregunta_key", 'type' => 'text', 'not null' => FALSE];
+	  $dades_formulari_fields[$custom_date_field] = ['description' => "Data pla personalitzat $pregunta_key", 'type' => 'varchar', 'length' => 20, 'not null' => FALSE];
+	}
+  }
+
+  // Taula principal de dades del formulari.
+  $schema['nou_formulari_dades_formulari'] = [
+	'description' => 'Desa la informació de les respostes del formulari.',
+	'fields' => $dades_formulari_fields,
+	'primary key' => ['id'],
+  ];
+  
+  // Taula per a l'historial, basada en la taula principal.
+  $schema['nou_formulari_dades_formulari_historial'] = $schema['nou_formulari_dades_formulari'];
+  $schema['nou_formulari_dades_formulari_historial']['description'] = 'Desa un registre històric de cada canvi fet al formulari.';
+  // Afegim una clau primària pròpia per a la taula d'historial.
+  $schema['nou_formulari_dades_formulari_historial']['fields']['hid'] = [
+	'description' => 'ID autoincremental únic per a la taula d\'historial.',
+	'type' => 'serial',
+	'not null' => TRUE,
+	'unsigned' => TRUE,
+  ];
+  $schema['nou_formulari_dades_formulari_historial']['primary key'] = ['hid'];
+  // El camp 'id' ara només és una referència, no una clau serial.
+  $schema['nou_formulari_dades_formulari_historial']['fields']['id']['type'] = 'int';
+  $schema['nou_formulari_dades_formulari_historial']['fields']['id']['not null'] = FALSE; // Pot ser que guardem un historial sense ID principal en algun cas.
+  unset($schema['nou_formulari_dades_formulari_historial']['fields']['id']['serial']);
+  
+  return $schema;
+}
+
+/**
+ * Implementació de hook_install().
+ * Importa el CSV d'equipaments a la taula corresponent en instal·lar.
+ */
+function nou_formulari_install() {
+  $csv_path = \Drupal::service('extension.list.module')->getPath('nou_formulari') . '/equipaments.csv';
+
+  if (file_exists($csv_path) && ($handle = fopen($csv_path, "r")) !== FALSE) {
+	// Salta la capçalera
+	fgetcsv($handle, 1000, ",");
+	while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+	  if (count($data) >= 5) {
+		\Drupal::database()->insert('nou_formulari_equipaments')
+		  ->fields([
+			'codi_equipament' => trim($data[0]),
+			'comarca' => $data[1],
+			'municipi' => $data[2],
+			'nom_equipament' => $data[3],
+			'espai_principal' => $data[4],
+		  ])
+		  ->execute();
+	  }
+	}
+	fclose($handle);
+  }
+}
+
+/**
+ * Afegeix camps per a plans de millora personalitzats.
+ */
+function nou_formulari_update_9001() {
+  // Aquesta funció ja s'hauria executat. La deixem per historicitat.
+  // Podem verificar si els camps existeixen per evitar errors si s'executa de nou.
+  $schema = \Drupal::database()->schema();
+  if (!$schema->fieldExists('nou_formulari_dades_formulari', 'participacio_P1_custom_plan')) {
+	// Si un dels camps no existeix, assumim que cap no ho fa i els afegim.
+	$schema_definition = nou_formulari_schema();
+	$fields_to_add = $schema_definition['nou_formulari_dades_formulari']['fields'];
+	foreach ($fields_to_add as $field_name => $spec) {
+		if (strpos($field_name, '_custom_plan') !== false) {
+			if (!$schema->fieldExists('nou_formulari_dades_formulari', $field_name)) {
+				$schema->addField('nou_formulari_dades_formulari', $field_name, $spec);
+			}
+		}
+	}
+  }
+  return t("S'han verificat els camps per a les accions de millora personalitzades.");
+}
+
+/**
+ * Afegeix la taula per a l'historial de dades del formulari.
+ */
+function nou_formulari_update_9002(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  
+  // Aquesta és la comprovació de seguretat clau:
+  // Si la taula NO existeix, la creem. Si ja existeix, no fem res.
+  if (!$schema->tableExists('nou_formulari_dades_formulari_historial')) {
+	$schema_definition = nou_formulari_schema();
+	$table_schema = $schema_definition['nou_formulari_dades_formulari_historial'];
+	$schema->createTable('nou_formulari_dades_formulari_historial', $table_schema);
+	
+	return t("S'ha creat correctament la taula 'nou_formulari_dades_formulari_historial'.");
+  }
+  else {
+	return t("La taula 'nou_formulari_dades_formulari_historial' ja existia. No s'ha realitzat cap acció.");
+  }
+}
